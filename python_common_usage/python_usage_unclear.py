@@ -145,8 +145,6 @@ print('%+f' % math.pi) #显示正负号
 
 #string
 import string
-transtable=string.maketrans(inputter,outputter)#翻译表
-str.translate(transtable)#字符对应转换
 string.ascii_letters#获取所有ascii码中字母字符的字符串（包含大写和小写）
 string.ascii_uppercase#获取所有ascii码中的大写英文字母
 string.ascii_lowercase#获取所有ascii码中的小写英文字母
@@ -158,13 +156,15 @@ string.whitespace#获取所有空白字符
 string.punctuation#获取所有的标点符号
 
 #ASCII 美国标准信息交换代码 定制了128个常用字符 主要是英文 数字 标点符号及键盘中其他按键对应的整数值
-#A~Z      65~90
-#a~z      97~122
-#0~9      48~57
-str=chr(ascii)#toggle ascii to char
-ascii=ordstr()#toggle char to ascii
+#A~Z	65~90
+#a~z	97~122
+#0~9	48~57
+str=chr(index)#转换字符索引为字符 自动识别属于哪种编码
+ascii=ord(str)#转换字符为字符索引 自动识别属于哪种编码
 
 #str
+trans_dict=str.maketrans(orgin_strs,sub_strs)#制作翻译表 将 orgin_strs 中的每一个字符 替换成 sub_strs 中对应索引的字符 长度必须相同 返回一个ASCII或utf-8字符索引替换前后一一对应的字典
+transed_str=str.translate(trans_dict)#用trans_dict替换str的所有字符
 str=repr(var_name)#返回"var_name"
 print(repr(s)) >>> '1 2\t 3\n 4'
 class=eval(class_str)#计算字符中的表达式 或 返回字符表示的类
@@ -194,8 +194,8 @@ str.isspace()#判断给定的字符串是否为空白符（空格 换行 制表�
 str.isprintable()#判断给定的字符串是否为可打印字符（只有空格可以 换行 制表符都不可以）
 str.isidentifier()#判断给定的字符串是否符合命名规则（只能是字母或下划线开头 不能包含除数字 字母和下划线以外的任意字符
 
-str.startswitch(str)#字符以str开头结尾 返回True False
-str.endswitch(str)
+str.startswitch(str)#字符以str开头 返回True False
+str.endswitch(str)#字符以str结尾 返回True False 可用于判断扩展名
 str.count(str,start,end)#计数str在字符串中出现的次数
 l,c,r=str.partition(str)#由字符串中str位置切分成三个字符串
 str=str.join(iter)
@@ -356,6 +356,7 @@ print(next(content_iter))
 #布尔值
 bool(var)#返回布尔值
 0 0.0 None [] () {} '' "" return None#布尔值为 False
+assert True_code,False_code#断言 程序正常运行调用True_code,程序出错调用False_code
 
 #等效
 var='str'
@@ -645,8 +646,35 @@ origin[4].append('c') #修改对象origin中的['a', 'b']数组对象
 >>>copied=[1, 2, 3, 4, ['a', 'b', 'c']]
 >>>deepcopied=[1, 2, 3, 4, ['a', 'b']]
 
-#代码优化
+#代码优化 略
 import profile
+
+from logging import basicConfig,DEBUG,debug,CRITICAL,disable#日志模块 记录调试信息 可以直接写在文件头
+#disable(CRITICAL)#禁用日志 在程序完成之后 将最前面的#取消
+basicConfig(level=DEBUG, format='%(levelname)s: %(message)s. [%(lineno)d]%(filename)s <%(asctime)s>',filename='debug.log',filemode='w')#配置日志输出格式 以'w'模式写入debug.log储存在程序同级目录
+debug(str)#用来记录调试信息 str将表示在%(message)s中
+
+#format
+%(levelno)s#打印日志级别的数值
+%(levelname)s#打印日志级别名称
+%(pathname)s#打印当前执行程序的路径 等于sys.argv[0]
+%(filename)s#打印当前执行程序名
+%(funcName)s#打印日志的当前函数
+%(lineno)d#打印日志的当前行号
+%(asctime)s#打印日志的时间
+%(thread)d#打印线程ID
+%(threadName)s#打印线程名称
+%(process)d#打印进程ID
+%(message)s#打印日志信息
+
+#日志级别 				日志函数
+logging.DEBUG 		logging.debug()#小细节
+logging.INFO 			logging.info()#一般信息
+logging.WARNING	logging.warning()#警告
+logging.ERROR 		logging.error()#错误
+logging.CRITICAL	logging.critical()#致命错误
+
+#另一种Bug处理方式 idle调试器debugger 略
 
 #读写文件
 f=open(filename,mode,encoding='UTF-8')#以mode模式 以UTF-8编码 打开或创建filename 不用utf-8可能引起异常
@@ -684,26 +712,37 @@ str_amount=f.write(str)#返回写入字符的数量并写入字符
 next_line=f.next()#返回文件下一行 这个方法也是file对象实例可以被当做迭代器使用的原因
 f.writelines(iter)#向文件写入一个字符串列表 字符串需要自己添加换行符
 
+#shelve 二进制储存数据
+import shelve
+shelf_file = shelve.open('shelf_name')#打开或创建shelf_name
+shelf_file['data_name'] = data#shelf_file可以看作一个字典
+shelf_file.close()#会在程序同居目录生成.bak .dat .dir三个文件进行二进制储存数据
+
 #操作系统
 #os operating system
 import os
+.#当前工作目录简写 .\
+..#当前工作目录的上一级目录简写 ..\
 os.system(r'str')#在cmd运行str语句
-file=os.popen(r'file_str')#在cmd运行str语句 且返回file对象
+str=os.popen(r'str')#在cmd运行str语句 且返回str
 cwd=os.getcwd()#返回当前工作目录
-fullpath=os.path.abspath(filename)#返回文件绝对路径
-print(os.path.exists(filename))#返回文件存在布尔值
+cwd=os.chdir(path)#改变当前工作目录
+fullpath=os.path.abspath(path)#返回目录绝对路径
+print(os.path.exists(path))#返回目录存在布尔值
+print(os.path.isabs(path))#返回目录存在布尔值
 if os.path.exists(out_dir)==False: os.mkdir(out_dir)#如果输出文件夹不存在 创建out_dir文件夹
 os.mkdir(dirname)#创建一层文件夹
-os.makedirs('/folder1/folder2/folder3/...')#创建多层文件夹
+os.makedirs('D:\\folder1\\folder2\\folder3\\...')#创建多层文件夹
 os.remove(fullpath)#只用于移除文件和文件夹
 os.rename(old_file_path, new_file_path)#只能对相应的文件进行重命名, 不能重命名文件的上级目录名
 os.renames(old_file_path, new_file_path)#是os.rename的升级版, 既可以重命名文件, 也可以重命名文件的上级目录名 不是新建目录
-os.rmdir(fullpath)#只能删除空文件夹 只删除最后一层
-os.removdirs(fullpath)#只能删除空文件夹 目录 将整个目录删除
+os.unlink(fullpath)#永久删除 path 处的文件
+os.rmdir(fullpath)#永久删除 path 处的文件 只能删除空文件夹
+os.removdirs(fullpath)#只能永久删除空文件夹 目录 将整个目录删除
 os.utime(fullpath, (accessed_time_stamp,modified_time_stamp))#修改文件的访问时间 改动时间 时间格式为unix时间戳
 print(os.path.isdir(fullpath))#返回是否目录或文件夹布尔值
 print(os.path.isfile(fullpath))#返回是否文件布尔值
-files_list=os.listdir(dirname)#返回该目录内的第一层文件夹和文件名列表
+files_list=os.listdir(dirname)#返回该目录内的第一层文件夹和文件列表
 import fnmatch
 for filename in os.listdir(dirname):
 	if fnmatch.fnmatch(filename,'*.txt'):pass#匹配目录中所有.txt文件
@@ -720,14 +759,35 @@ for root, dirs, files in os.walk(root):
 fullpath=os.path.join(dirname,filename)#拼接目录和文件名 返回绝对路径
 (dirname,filename)=os.path.split(fullpath)#返回路径与文件名组成的元组 不含/
 (file_name,extension)=os.path.splitext(filename)#返回文件名字和后缀(扩展名 含.)组成的元组
-filename=os.path.basename(fullpath)#返回文件名
-dirname=os.path.dirname(fullpath)#返回目录路径
+['C:', 'Windows', 'System32', 'calc.exe']='C:\\Windows\\System32\\calc.exe'.split(os.path.sep)#根据使用的系统判断使用\还是/分割
+dirname=os.path.dirname(fullpath)#返回目录路径 D:\folder1\folder2
+filename=os.path.basename(fullpath)#返回文件名 *.*
 accessed_time=os.path.getatime(filename)#输出最近访问时间 累计秒格式
 created_time=os.path.getctime(filename)#输出文件创建时间 累计秒格式
 modified_time=os.path.getmtime(filename)#输出最近修改时间 累计秒格式
 clear_time=time.gmtime(os.path.getmtime(filename))# 以struct_time形式输出最近修改时间
 >>>clear_time=time.struct_time(tm_year=2016, tm_mon=4, tm_mday=7, tm_hour=2, tm_min=55, tm_sec=45, tm_wday=3, tm_yday=98, tm_isdst=0)
 file_size=os.path.getsize(filename)#输出文件大小 以字节为单位
+
+from pyperclip import copy,paste#访问剪贴板
+copy(str)#复制到剪切板 只支持文本内容
+str=paste()#粘贴文本
+
+import sys
+script_name=sys.argv[0]#0代表程序本身完整目录 1: 代表从cmd接受的每个参数 以空格分割
+user_argv=sys.argv[1]
+user_argv_list=sys.argv[1:]
+cmd输入 script.py -argv1 a2 d
+>>>argv_list=['script.py','-argv1','a2','d']
+
+import shutil#复制 移动 改名 删除文件
+destination_file_path=shutil.copy(source_file_path,destination_file_path)#将 source_file_path 复制到 destination_file_path 返回 destination_file_path 只能复制文件
+destination_path=shutil.copytree(source_path,destination_path)#将 source_path 复制到 destination_path 返回 destination_path 用于复制文件夹 包括文件夹内的所有文件和文件夹
+destination_path=shutil.move(source_path,destination_path)#将 source_path 移动到 destination_path 返回 destination_path 会覆盖和 destination_path 同名的文件 destination_path 中的文件夹目录必须存在 否则会异常 如果文件名不存在 会创建
+shutil.rmtree(path)#永久删除path文件夹 包含所有子文件和文件夹
+
+import send2trash#需要安装模块
+send2trash.send2trash(filename)#移动到回收站
 
 #fnmatch 主要用于文件匹配 目录匹配 正则表达的简化模块
 import fnmatch,os
@@ -749,6 +809,23 @@ import glob
 []#匹配指定范围内的字符 如 [0-9]匹配数字
 for n in glob.glob('pattern'):#同时获取所有的匹配路径
 for n in glob.iglob('pattern'):#一次只获取一个匹配路径
+
+import zipfile#压缩模块
+zip_file=zipfile.ZipFile('zip_file.zip')#创建 ZipFile 对象
+zip_dir_list=zip_file.namelist()#返回zip文件里的所有文件目录组成的列表 如
+zip_file.zip
+	cats_folder
+		catnames.txt
+		zophie.jpg
+	spam.txt
+>>>zip_dir_list=['spam.txt', 'cats_folder/', 'cats_folder/catnames.txt', 'cats_folder/zophie.jpg']
+spam_info=zip_file.getinfo('spam.txt')#返回spam.txt的信息对象
+spam_info.file_size#原文件大小 字节单位
+spam_info.compress_size#压缩后文件大小 字节单位
+zip_file.extractall('path')#解压到path目录 不存在会被创建 默认为程序同级目录
+outpath=zip_file.extract('filename','path')#解压单个filename到path目录 不存在会被创建 默认为程序同级目录 返回path目录
+zip_file.write('add_filename',compress_type=zipfile.ZIP_DEFLATED)#用deflate算法将add_filename压缩进zip_file
+zip_file.close()#压缩包不使用一定要关闭
 
 #类 任何对象都可以定义类 例如 学校-年级-班级-学生-成绩 每一层都是一个类 数据层次太多必须用类 否则数据难以处理
 class ClassName(object):
@@ -875,82 +952,107 @@ cols_list=list(zip(*rows_list))#矩阵置换 矩阵旋转 行转列 列转行 �
 from openpyxl.drawing.image import Image#插入图像
 sheet.add_image(Image('logo.png'), 'A1')#添加到工作表并锚定在单元格旁边
 
-from pyperclip import copy,paste#访问剪贴板
-copy(str)#复制到剪切板 只支持文本内容
-str=paste()#粘贴文本
-
-import sys
-script_name=sys.argv[0]#0代表程序本身完整目录 1: 代表从cmd接受的每个参数 以空格分割
-user_argv=sys.argv[1]
-user_argv_list=sys.argv[1:]
-cmd输入 script.py -argv1 a2 d
->>>user_argv_list=['-argv1','a2','d']
-
-import re#正则表达
+import re#正则表达式
+#正则表达式常用方法
 match_result=re.match(pattern,string,flags)#以pattern正则表达式从string起始位置匹配 只返回一个 无匹配结果返回None
 search_result=re.search(pattern,string,flags)#以pattern正则表达式搜索string直到找到一个匹配 只返回一个 无匹配结果返回None
 sub_result=re.sub(pattern,substitute,string,count,flags)#以pattern正则表达式搜索string 找到一个匹配 将匹配字符串替换为substitute 无匹配结果返回None 替换count次 默认全部替换 substitute可以是函数
 split_result=re.split(pattern,string,count,flags)#以pattern正则表达式匹配string后返回列表
 def multiply_2(matched):return str(int(matched.group('value')) * 2)
 'A46G8HFD1134'==re.sub(r'(?P<value>\d+)', multiply_2, 'A23G4HFD567')#将字符串中的数字x2
+
+#编译正则表达式
 regex_pattern=re.compile(pattern,flags)#生成一个正则表达式
 match_result=regex_pattern.match(string,start_index,end_index)#返回一个match对象
+fullmatch_result=regex_pattern.fullmatch(string,start_index,end_index)#整个 string 匹配正则表达式 才返回 否则返回None
 match_result.group(index)#返回匹配组 0表示所有分组组成的字符 group从1开始
-match_result.start()#返回第一个匹配结果第一个字符在string的索引
-match_result.end()#返回最后一个匹配结果最后一个字符在string的索引
+match_result.start()#返回匹配结果第一个字符在string的索引
+match_result.end()#返回匹配结果最后一个字符在string的索引
 match_result.span()#返回(start_index,end_index)
 search_result=regex_pattern.search(string,start_index,end_index)#返回一个search对象 用法同match对象
-findall_result=regex_pattern.findall(string,start_index,end_index)#返回所有匹配组成的列表 匹配所有 如果没有匹配返回空列表
+findall_result=regex_pattern.findall(string,start_index,end_index)#返回所有匹配组成的列表 匹配所有 如果没有匹配返回空列表 如果正则表达式分组 返回由分组组成的每个元组组成的列表
 finditer_result=regex_pattern.finditer(string,start_index,end_index)#和findall类似 但返回迭代器
+sub_result=regex_pattern.sub(substitute,string,count,flags)#将匹配字符串替换为substitute后返回string 无匹配结果返回原string 替换count次 默认全部替换 substitute可以是函数
+subn_result=regex_pattern.subn(substitute,string,count,flags)#和 sub类似 但返回元组 (string,count)
+escape_result=regex_pattern.escape(pattern)#转义pattern中具有正则表达式特殊含义的字符
+'|'.join(map(re.escape, sorted(['+', '-', '*', '/', '**'], reverse=True)))==r'/|\-|\+|\*\*|\*'
+
 #flags控制匹配方式
-re.I#忽略大小写
-re.L#基本没用
-re.U#基本没用
-re.M#多行匹配 影响 ^ 和 $
-re.S#使 . 能够匹配所有字符
-re.X#忽略表达式中的空白 和 #注释
+re.I#re.IGNORECASE 忽略字母大小写
+re.A#re.ASCII 只匹配ASCII字符
+re.DEBUG#显示编译时的debug信息
+re.L#re.LOCALE 基本没用 只能对byte样式有效 由当前语言区域决定 \w, \W, \b, \B 和大小写敏感匹配
+re.M#re.MULTILINE 使^除了匹配整个字符串的起始位置，还匹配换行符\n后面的位置 $除了匹配整个字符串的结束位置，还匹配换行符\n前面的位置
+re.S#re.DOTALL 使 . 能够匹配所有字符
+re.X#re.VERBOSE 忽略表达式中的空白 和 #注释 让长正则表达式易于理解
+verbose_regex = re.compile(
+r'''( (\d{3}|\(\d{3}\))?	# area code
+(\s|-|\.)?					# separator
+\d{3}						# first 3 digits
+(\s|-|\.)						# separator
+\d{4}						# last 4 digits
+)''',re.X)
+re.findall(r'^This.*?line.$', 'This is the first line.\nThis is the second line.\nThis is the third line.', flags=re.M+re.S)==['This is the first line.', 'This is the second line.', 'This is the third line.']#匹配多行文本的每一行
+flags=re.M | re.S#另一种flags表示
+re.findall(r'(?ms)^This.*?line.$')#另一种flags表示 这种表达方式不需要写flags 但必须在表达式开头用(?)声明 可选参数有(?aiLmsux)
+
+#(?)参数
+(str)#分组 索引从1开始 0表示所有组组成的字符串
+(?aiLmsx)#字母分别代表 re.A I L M S X 必须在表达式开头使用
+(?:str)#在使用group之类的函数时忽略该组
+(?P<group_name>str)#为该组命名 使用groupdict()时键为group_name 值为匹配的组
+(?P=group_name)#引用(?P<group_name>str)
+(?#str)#str会被忽略 当作注释
+(?=str)#只有匹配到str的时候 才会匹配(?=str)前面的表达式
+(?!str)#只有没有匹配到str的时候 才会匹配(?!str)前面的表达式
+(?<=str)#在字符串非开始位置匹配以str开头的字符串 只能是明确的长度 可以理解成 ^str 在字符串非开始位置匹配符合字符
+(?<!str)#在字符串非开始位置匹配不以str开头的字符串 只能是明确的长度 可以理解成 ^str 在字符串非开始位置匹配不符合字符
+(?(group_index/group_name)yes-pattern|no-pattern)#如果给定的 group_index 或 group_name 存在，将会尝试匹配 yes-pattern ，否则就尝试匹配 no-pattern，no-pattern 可选，也可以被忽略。比如，
+r'(<)?(\w+@\w+(?:\.\w+)+)(?(1)>|$)'#是一个email样式匹配，将匹配 '<user@host.com>' 或 'user@host.com' ，但不会匹配 '<user@host.com' ，也不会匹配 'user@host.com>'
 match_result.group()#返回匹配的整个结果
 match_result.group(int)#返回匹配结果的第int组 从1开始
 match_result.groups()#返回匹配的所有组
+match_result.groupdict()#返回匹配的所有组名和组组成的字典 键为组名 值为匹配的组
 
 #匹配模式
-^#匹配字符串的开头
-$#匹配字符串的末尾
-.#匹配任意字符 除了\n 当re.M标记被指定时 则可以匹配包括换行符的任意字符
-[...]#用来表示一组字符,单独列出：[amk] 匹配 'a' 'm'或'k'
-[^...]#不在[]中的字符：[^abc] 匹配除了a,b,c之外的字符
-re*#匹配0个或多个的表达式
-re+#匹配1个或多个的表达式
-re?#匹配0个或1个由前面的正则表达式定义的片段 非贪婪方式
-re{ n}#精确匹配 n 个前面表达式 例如  o{2} 不能匹配 "Bob" 中的 "o" 但是能匹配 "food" 中的两个 o
-re{ n,}#匹配 n 个前面表达式 例如  o{2,} 不能匹配"Bob"中的"o" 但能匹配 "foooood"中的所有 o        "o{1,}" 等价于 "o+"            "o{0,}" 则等价于 "o*"
-re{ n, m}#匹配 n 到 m 次由前面的正则表达式定义的片段 贪婪方式
-a| b#匹配a或b
-(re)#对正则表达式分组并记住匹配的文本
-(?imx)#正则表达式包含三种可选标志：i, m, 或 x  只影响括号中的区域
-(?-imx)#正则表达式关闭 i, m, 或 x 可选标志 只影响括号中的区域
-(?: re)#类似 (...), 但是不表示一个组
-(?imx: re)#在括号中使用i, m, 或 x 可选标志
-(?-imx: re)#在括号中不使用i, m, 或 x 可选标志
-(?#...)#注释.
-(?= re)#前向肯定界定符 如果所含正则表达式 以 ... 表示 在当前位置成功匹配时成功 否则失败 但一旦所含表达式已经尝试 匹配引擎根本没有提高；模式的剩余部分还要尝试界定符的右边
-(?! re)#前向否定界定符 与肯定界定符相反；当所含表达式不能在字符串当前位置匹配时成功
-(?> re)#匹配的独立模式 省去回溯
-'\w' #匹配字母数字及下划线 '[A-Za-z0-9_]'
-'\W'#匹配非字母数字及下划线 '[^A-Za-z0-9_]'
-'\s'#匹配任意空白字符 等价于  [ \f\n\r\t\v]
-'\S'#匹配任意非空字符 [^ \f\n\r\t\v]
-'\d'#匹配任意数字 等价于 [0-9].
-'\D'#匹配任意非数字 [^0-9]
-'\A'#匹配字符串开始
-'\Z'#匹配字符串结束 如果是存在换行 只匹配到换行前的结束字符串
-'\z'#匹配字符串结束
-'\G'#匹配最后匹配完成的位置
-'\b'#匹配一个单词边界 也就是指单词和空格间的位置 例如  'er\b' 可以匹配"never" 中的 'er' 但不能匹配 "verb" 中的 'er'
-'\B'#匹配非单词边界 'er\B' 能匹配 "verb" 中的 'er' 但不能匹配 "never" 中的 'er'
-'\n', '\t', 等.#匹配一个换行符 匹配一个制表符 等
-'\1...\9'#匹配第n个分组的内容
-'\10'#匹配第n个分组的内容 如果它经匹配 否则指的是八进制字符码的表达式
+r'pattern'#r表示忽略转义字符 写正则表达式加上就行
+贪婪模式#有多种匹配字符串符合正则表达式 匹配字符串最长的 默认模式
+非贪婪模式#有多种匹配字符串符合正则表达式 匹配字符串最短的 用?在正则式结尾修饰 如 .*?
+'^str'#只匹配以str开头的字符串 caret ^必须在$之前 caret before dollar ==abcd
+'str$'#只匹配以str结尾的字符串 dollar ^必须在$之前 caret before dollar ==abcd
+.#匹配任意一个除了\n的字符 当re.M标记被指定时 则可以匹配包括换行符的任意字符
+[str]#匹配在[]的一个字符 如[amk] 匹配 'a' 'm'或'k'
+[^str]#不在[]中的字符：[^abc] 匹配除了a,b,c之外的字符
+(str)*#匹配0个到n个str 贪婪模式
+(str)*?#匹配0个到n个str 非贪婪模式
+(str)+#匹配1个到n个str 贪婪模式
+(str)+?#匹配1个到n个str 非贪婪模式
+(str)?#匹配时str可有可无 贪婪模式
+(str)??#匹配时str可有可无 非贪婪模式 即匹配结果为空 ""
+(str){ x}#只匹配重复x次的str 例如  (o){2} 不能匹配 "Bob" 中的 "o" 但是能匹配 "food" 中的两个 o
+(str){ x,}#只匹配重复x次到n次的str 例如  o{2,} 不能匹配"Bob"中的"o" 但能匹配 "foooood"中的所有 o        "o{1,}" 等价于 "o+"            "o{0,}" 则等价于 "o*"
+(str){ ,y}#只匹配重复0次到y次的str 例如  o{2,} 不能匹配"Bob"中的"o" 但能匹配 "foooood"中的所有 o        "o{1,}" 等价于 "o+"            "o{0,}" 则等价于 "o*"
+(str){ x, y}#只匹配重复x到y次的str 贪婪模式
+(str){ x, y}?#只匹配重复x到y次的str 非贪婪模式 或 str可有可无
+a|b#匹配a或b
+
+r'\w' #匹配一个字母数字及下划线 [A-Za-z0-9_] word：3rd-Person
+r'\W'#匹配一个非字母数字及下划线 '[^A-Za-z0-9_]'
+r'\s'#匹配一个任意空白字符 等价于  [ \f\n\r\t\v]
+r'\S'#匹配一个任意非空字符 [^ \f\n\r\t\v]
+r'\d'#匹配一个任意数字 等价于 [0-9].
+r'\D'#匹配一个任意非数字 [^0-9]
+r'\A'#类似^ 但不受re.M控制
+r'\Z'#类似$ 但不受re.M控制
+r'\z'#匹配一个字符串结束
+r'\G'#匹配一个最后匹配完成的位置
+'\b'#匹配一个单词边界 如 r'\bfoo\b' 匹配 'foo', 'foo.', '(foo)', 'bar foo baz' 但不匹配 'foobar' 或者 'foo3'
+r'\B'#匹配非单词边界 如 r'py\B' 匹配 'python', 'py3', 'py2', 但不匹配 'py', 'py.', 或者 'py!'. \B 是 \b 的取非
+'\n'#匹配一个换行符
+'\t'#匹配一个制表符
+'\1'-'\99'#第1-99个分组的内容 表达式自身也可以引用
+re.compile(r'Agent (\w)\w*').sub(r'\1****', 'Agent Alice told Agent Carol that Agent Eve knew Agent Bob was a spy.')=='A**** told C**** that E**** knew B**** was a spy.'
+
 [0-9]#匹配任何数字 类似于 [0123456789]
 [a-z]	#匹配任何小写字母
 [A-Z]#匹配任何大写字母
@@ -960,8 +1062,12 @@ a| b#匹配a或b
 
 r'\d(.*) are (.*?) .*'
 r 表示忽略转义字符
-(.*) 第一个匹配分组，.* 代表匹配除换行符之外的所有字符
+(.*) 第一个匹配分组，.* 代表匹配除之外的所有长度的字符
 (.*?) 第二个匹配分组，.*? 后面多个问号，代表非贪婪模式，只匹配符合条件的最少字符
+re.compile(r'<.*?>').search('<To serve man> for dinner.>').group()=='<To serve man>'
+re.compile(r'<.*>').search('<To serve man> for dinner.>').group()=='<To serve man> for dinner.>'
+
+#常用正则表达式 https://www.cnblogs.com/magicking/p/8986869.html
 
 pyInstaller #python打包 .exe程序 在别的电脑有几率exe出错 原因是别的电脑缺少相关运行库 过几年等pyInstaller自己更新打包算法
 #安装打包模块之前 先升级pip
